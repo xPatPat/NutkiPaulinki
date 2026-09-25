@@ -1,0 +1,1 @@
+Projekt bazowy. Kolejny krok: wygenerowanie kompletnego kodu aplikacji i konfiguracji Firebase.
