@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -8,8 +9,11 @@ import {
 } from "firebase/auth";
 import { auth } from "../../lib/firebase";
 
+const EMAIL_NAUCZYCIELA = "pojlola@gmail.com";
+
 export default function Login() {
-const router = useRouter();
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [haslo, setHaslo] = useState("");
   const [rejestracja, setRejestracja] = useState(false);
@@ -18,25 +22,38 @@ const router = useRouter();
   async function obsluz() {
     setKomunikat("");
 
+    const emailLogowania = email.trim().toLowerCase();
+
     try {
       if (rejestracja) {
         await createUserWithEmailAndPassword(
           auth,
-          email,
+          emailLogowania,
           haslo
         );
-
-        setKomunikat("Konto zostało utworzone!");
       } else {
         await signInWithEmailAndPassword(
-  auth,
-  email,
-  haslo
-);
-
-router.push("/uczen");
+          auth,
+          emailLogowania,
+          haslo
+        );
       }
-    } catch (error) {
+
+      if (
+        emailLogowania ===
+        EMAIL_NAUCZYCIELA.toLowerCase()
+      ) {
+        router.push("/nauczyciel");
+      } else {
+        router.push("/uczen");
+      }
+    } catch (error: any) {
+      console.error(
+        "Błąd logowania:",
+        error.code,
+        error.message
+      );
+
       setKomunikat("Błędny email lub hasło.");
     }
   }
@@ -48,7 +65,8 @@ router.push("/uczen");
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "#f4f7fb",
+        background:
+          "linear-gradient(135deg, #fdf6ff, #eef9ff)",
         fontFamily: "Arial",
       }}
     >
@@ -56,12 +74,21 @@ router.push("/uczen");
         style={{
           background: "white",
           padding: "40px",
-          borderRadius: "16px",
+          borderRadius: "25px",
           width: "350px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
         }}
       >
-        <h1>
-          {rejestracja ? "📝 Rejestracja" : "🔐 Logowanie"}
+        <h1
+          style={{
+            textAlign: "center",
+            color: "#5b4b8a",
+            marginBottom: "25px",
+          }}
+        >
+          {rejestracja
+            ? "📝 Rejestracja"
+            : "🔐 Logowanie"}
         </h1>
 
         <input
@@ -71,8 +98,12 @@ router.push("/uczen");
           onChange={(e) => setEmail(e.target.value)}
           style={{
             width: "100%",
+            boxSizing: "border-box",
             padding: "12px",
             marginBottom: "15px",
+            borderRadius: "10px",
+            border: "1px solid #ddd",
+            fontSize: "16px",
           }}
         />
 
@@ -83,8 +114,12 @@ router.push("/uczen");
           onChange={(e) => setHaslo(e.target.value)}
           style={{
             width: "100%",
+            boxSizing: "border-box",
             padding: "12px",
             marginBottom: "15px",
+            borderRadius: "10px",
+            border: "1px solid #ddd",
+            fontSize: "16px",
           }}
         />
 
@@ -93,10 +128,18 @@ router.push("/uczen");
           style={{
             width: "100%",
             padding: "12px",
+            border: "none",
+            borderRadius: "12px",
+            background: "#d9c8ff",
+            color: "#4b3b70",
+            fontWeight: "bold",
+            fontSize: "16px",
             cursor: "pointer",
           }}
         >
-          {rejestracja ? "Utwórz konto" : "Zaloguj się"}
+          {rejestracja
+            ? "Utwórz konto"
+            : "Zaloguj się"}
         </button>
 
         <button
@@ -105,6 +148,11 @@ router.push("/uczen");
             width: "100%",
             padding: "12px",
             marginTop: "10px",
+            border: "none",
+            borderRadius: "12px",
+            background: "#f3edff",
+            color: "#5b4b8a",
+            fontWeight: "bold",
             cursor: "pointer",
           }}
         >
@@ -113,8 +161,19 @@ router.push("/uczen");
             : "Utwórz nowe konto"}
         </button>
 
-        <p>{komunikat}</p>
+        {komunikat && (
+          <p
+            style={{
+              textAlign: "center",
+              color: "#c44b4b",
+              marginTop: "15px",
+            }}
+          >
+            {komunikat}
+          </p>
+        )}
       </div>
     </main>
   );
 }
+
