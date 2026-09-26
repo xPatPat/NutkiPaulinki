@@ -301,7 +301,27 @@ export default function Nauczyciel() {
             <div style={{ fontSize: "55px" }}>
               👨‍🏫
             </div>
-
+            <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "20px",
+  }}
+>
+  <Link
+    href="/nauczyciel/zadania"
+    style={{
+      background: "#d9c8ff",
+      color: "#4b3b70",
+      padding: "12px 22px",
+      borderRadius: "14px",
+      textDecoration: "none",
+      fontWeight: "bold",
+    }}
+  >
+    📝 Zadania
+  </Link>
+</div>
             <h1
               style={{
                 color: "#5b4b8a",
